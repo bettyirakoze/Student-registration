@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Registration Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .form-wrap {
+      width: 100%;
+      max-width: 560px;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+    }
+
+    /* ── Progress bar ── */
+    .progress-bar-wrap {
+      height: 4px;
+      background: #dde3ea;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #1a3a5c;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* ── Header ── */
+    .form-header {
+      background: #1a3a5c;
+      padding: 1.5rem 2rem;
+    }
+    .form-header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 0.01em;
+    }
+    .form-header p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-top: 4px;
+    }
+
+    /* ── Body ── */
+    .form-body {
+      padding: 1.75rem 2rem 2rem;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8a9ab0;
+      border-bottom: 1px solid #e8ecf0;
+      padding-bottom: 6px;
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── Fields ── */
+    .field {
+      margin-bottom: 1.25rem;
+    }
+
+    label.field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .required-star {
+      color: #c0392b;
+      margin-left: 2px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      padding: 10px 13px;
+      font-size: 14px;
+      font-family: inherit;
+      border: 1.5px solid #d1d9e0;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    textarea:focus {
+      border-color: #1a3a5c;
+      box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.12);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 85px;
+      line-height: 1.6;
+    }
+
+    /* ── Phone field ── */
+    .phone-wrap {
+      position: relative;
+    }
+    .phone-prefix {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: #6b7a8d;
+      pointer-events: none;
+      font-weight: 500;
+    }
+    .phone-wrap input {
+      padding-left: 54px;
+    }
+
+    /* ── Hint ── */
+    .hint {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: #6b7a8d;
+      margin-top: 5px;
+    }
+    .hint-icon {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #1a3a5c;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .hint strong {
+      color: #1a3a5c;
+      font-weight: 600;
+    }
+
+    /* ── Validation states ── */
+    .field.has-error input,
+    .field.has-error textarea {
+      border-color: #c0392b;
+      box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.10);
+    }
+    .field.has-success input,
+    .field.has-success textarea {
+      border-color: #27ae60;
+      box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.10);
+    }
+
+    .error-msg {
+      display: none;
+      font-size: 12px;
+      color: #c0392b;
+      margin-top: 5px;
+      align-items: center;
+      gap: 4px;
+    }
+    .field.has-error .error-msg {
+      display: flex;
+    }
+
+    .success-msg {
+      display: none;
+      font-size: 12px;
+      color: #27ae60;
+      margin-top: 5px;
+      align-items: center;
+      gap: 4px;
+    }
+    .field.has-success .success-msg {
+      display: flex;
+    }
+
+    .char-count {
+      font-size: 11px;
+      color: #8a9ab0;
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    /* ── Gender radio cards ── */
+    .gender-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .radio-card {
+      flex: 1;
+      min-width: 100px;
+      border: 1.5px solid #d1d9e0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      user-select: none;
+      background: #ffffff;
+    }
+    .radio-card:hover {
+      border-color: #1a3a5c;
+      background: #f5f8fc;
+    }
+    .radio-card input[type="radio"] {
+      display: none;
+    }
+    .radio-card.selected {
+      border: 2px solid #1a3a5c;
+      background: #eef3f8;
+    }
+
+    .radio-dot {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      border: 1.5px solid #b0bcc9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: border-color 0.2s;
+    }
+    .radio-card.selected .radio-dot {
+      border-color: #1a3a5c;
+    }
+    .radio-inner {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #1a3a5c;
+      display: none;
+    }
+    .radio-card.selected .radio-inner {
+      display: block;
+    }
+
+    .radio-emoji {
+      font-size: 18px;
+    }
+    .radio-label {
+      font-size: 14px;
+      color: #374151;
+      font-weight: 500;
+    }
+
+    .field.has-error .gender-group .radio-card {
+      border-color: #c0392b;
+    }
+
+    /* ── Submit button ── */
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: #1a3a5c;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s, transform 0.1s;
+      letter-spacing: 0.02em;
+    }
+    .submit-btn:hover {
+      background: #0f2540;
+    }
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* ── Success banner ── */
+    .success-banner {
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+      background: #eafaf1;
+      border: 1px solid #a9dfbf;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-top: 1rem;
+    }
+    .success-banner .sb-icon {
+      font-size: 22px;
+      margin-top: 1px;
+    }
+    .success-banner .sb-text {
+      font-size: 14px;
+      color: #1e8449;
+      line-height: 1.5;
+    }
+    .success-banner .sb-text strong {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-wrap">
+
+    <!-- Progress bar -->
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="prog"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="form-header">
+      <h1>&#127979; Student Registration</h1>
+      <p>Fill in all required fields to complete your registration</p>
+    </div>
+
+    <!-- Body -->
+    <div class="form-body">
+
+      <div class="section-label">Personal Information</div>
+
+      <!-- Full Name -->
+      <div class="field" id="f-name">
+        <label class="field-label" for="fullname">
+          Full Name <span class="required-star">*</span>
+        </label>
+        <input
+          type="text"
+          id="fullname"
+          placeholder="e.g. Jean Pierre Habimana"
+          autocomplete="name"
+          oninput="validateName(this)"
+        />
+        <div class="error-msg">&#9888; Please enter your full name (at least 2 words)</div>
+        <div class="success-msg">&#10003; Looks good!</div>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="field" id="f-phone">
+        <label class="field-label" for="phone">
+          Phone Number <span class="required-star">*</span>
+        </label>
+        <div class="phone-wrap">
+          <span class="phone-prefix">+250</span>
+          <input
+            type="tel"
+            id="phone"
+            placeholder="788 123 456"
+            maxlength="13"
+            autocomplete="tel"
+            oninput="validatePhone(this)"
+          />
+        </div>
+        <!-- Format hint -->
+        <div class="hint">
+          <span class="hint-icon">i</span>
+          Format: <strong>+250 788 123 456</strong> &mdash; enter the 9 digits after +250
+        </div>
+        <div class="error-msg">&#9888; Enter a valid 9-digit Rwandan number (e.g. 788 123 456)</div>
+        <div class="success-msg">&#10003; Valid phone number</div>
+      </div>
+
+      <!-- Gender -->
+      <div class="field" id="f-gender">
+        <label class="field-label">
+          Gender <span class="required-star">*</span>
+        </label>
+        <div class="gender-group" id="genderGroup">
+
+          <label class="radio-card" onclick="selectGender(this, 'male')">
+            <input type="radio" name="gender" value="male" />
+            <span class="radio-dot"><span class="radio-inner"></span></span>
+            <span class="radio-emoji">&#128104;</span>
+            <span class="radio-label">Male</span>
+          </label>
+
+          <label class="radio-card" onclick="selectGender(this, 'female')">
+            <input type="radio" name="gender" value="female" />
+            <span class="radio-dot"><span class="radio-inner"></span></span>
+            <span class="radio-emoji">&#128105;</span>
+            <span class="radio-label">Female</span>
+          </label>
+
+          <label class="radio-card" onclick="selectGender(this, 'other')">
+            <input type="radio" name="gender" value="other" />
+            <span class="radio-dot"><span class="radio-inner"></span></span>
+            <span class="radio-emoji">&#129489;</span>
+            <span class="radio-label">Other</span>
+          </label>
+
+        </div>
+        <div class="error-msg" id="gender-err">&#9888; Please select a gender</div>
+      </div>
+
+      <div class="section-label" style="margin-top: 1.25rem;">Location</div>
+
+      <!-- Address -->
+      <div class="field" id="f-address">
+        <label class="field-label" for="address">
+          Home Address <span class="required-star">*</span>
+        </label>
+        <textarea
+          id="address"
+          placeholder="e.g. KG 12 Ave, Kicukiro, Kigali, Rwanda"
+          rows="3"
+          maxlength="200"
+          oninput="validateAddress(this)"
+        ></textarea>
+        <div class="char-count"><span id="addr-count">0</span> / 200 characters</div>
+        <div class="error-msg">&#9888; Please enter your address (at least 10 characters)</div>
+        <div class="success-msg">&#10003; Address saved</div>
+      </div>
+
+      <!-- Submit -->
+      <button class="submit-btn" onclick="submitForm()">
+        &#10003;&nbsp; Submit Registration
+      </button>
+
+      <!-- Success banner -->
+      <div class="success-banner" id="successBanner">
+        <span class="sb-icon">&#9989;</span>
+        <div class="sb-text">
+          <strong>Registration submitted successfully!</strong><br />
+          Welcome, <span id="sb-name"></span>. Your details have been received.
+        </div>
+      </div>
+
+    </div><!-- /.form-body -->
+  </div><!-- /.form-wrap -->
+
+  <script>
+    var genderSelected = null;
+
+    /* ── Name validation ── */
+    function validateName(el) {
+      var field = document.getElementById('f-name');
+      var words = el.value.trim().split(/\s+/).filter(function(w) { return w.length > 1; });
+      if (el.value.trim().length === 0) {
+        field.classList.remove('has-error', 'has-success');
+      } else if (words.length < 2) {
+        field.classList.add('has-error');
+        field.classList.remove('has-success');
+      } else {
+        field.classList.remove('has-error');
+        field.classList.add('has-success');
+      }
+      updateProgress();
+    }
+
+    /* ── Phone validation ── */
+    function validatePhone(el) {
+      var field = document.getElementById('f-phone');
+      var digits = el.value.replace(/\D/g, '');
+      if (el.value.length === 0) {
+        field.classList.remove('has-error', 'has-success');
+      } else if (digits.length !== 9) {
+        field.classList.add('has-error');
+        field.classList.remove('has-success');
+      } else {
+        field.classList.remove('has-error');
+        field.classList.add('has-success');
+      }
+      updateProgress();
+    }
+
+    /* ── Address validation ── */
+    function validateAddress(el) {
+      var field = document.getElementById('f-address');
+      var val = el.value.trim();
+      document.getElementById('addr-count').textContent = val.length;
+      if (val.length === 0) {
+        field.classList.remove('has-error', 'has-success');
+      } else if (val.length < 10) {
+        field.classList.add('has-error');
+        field.classList.remove('has-success');
+      } else {
+        field.classList.remove('has-error');
+        field.classList.add('has-success');
+      }
+      updateProgress();
+    }
+
+    /* ── Gender selection ── */
+    function selectGender(card, val) {
+      var cards = document.querySelectorAll('.radio-card');
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.remove('selected');
+      }
+      card.classList.add('selected');
+      card.querySelector('input[type="radio"]').checked = true;
+      genderSelected = val;
+      document.getElementById('f-gender').classList.remove('has-error');
+      updateProgress();
+    }
+
+    /* ── Progress bar ── */
+    function updateProgress() {
+      var count = 0;
+      var nameWords = document.getElementById('fullname').value.trim().split(/\s+/).filter(function(w){ return w.length > 1; });
+      if (nameWords.length >= 2) count++;
+      var phone = document.getElementById('phone').value.replace(/\D/g, '');
+      if (phone.length === 9) count++;
+      if (genderSelected) count++;
+      var addr = document.getElementById('address').value.trim();
+      if (addr.length >= 10) count++;
+      document.getElementById('prog').style.width = (count / 4 * 100) + '%';
+    }
+
+    /* ── Submit ── */
+    function submitForm() {
+      var valid = true;
+
+      /* validate name */
+      var nameEl = document.getElementById('fullname');
+      var nameWords = nameEl.value.trim().split(/\s+/).filter(function(w){ return w.length > 1; });
+      if (nameWords.length < 2) {
+        document.getElementById('f-name').classList.add('has-error');
+        document.getElementById('f-name').classList.remove('has-success');
+        valid = false;
+      }
+
+      /* validate phone */
+      var phoneDigits = document.getElementById('phone').value.replace(/\D/g, '');
+      if (phoneDigits.length !== 9) {
+        document.getElementById('f-phone').classList.add('has-error');
+        document.getElementById('f-phone').classList.remove('has-success');
+        valid = false;
+      }
+
+      /* validate gender */
+      if (!genderSelected) {
+        document.getElementById('f-gender').classList.add('has-error');
+        valid = false;
+      }
+
+      /* validate address */
+      var addr = document.getElementById('address').value.trim();
+      if (addr.length < 10) {
+        document.getElementById('f-address').classList.add('has-error');
+        document.getElementById('f-address').classList.remove('has-success');
+        valid = false;
+      }
+
+      if (valid) {
+        var banner = document.getElementById('successBanner');
+        document.getElementById('sb-name').textContent = nameEl.value.trim();
+        banner.style.display = 'flex';
+        document.getElementById('prog').style.width = '100%';
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  </script>
+
+</body>
+</html>
